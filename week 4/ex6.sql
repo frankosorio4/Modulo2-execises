@@ -40,12 +40,13 @@ select pr.nome_produto, sum(ip.quantidade) as total_itens
 order by pr.nome_produto
 
 -- Calcule a soma dos valores dos pedidos para cada cliente que tenha feito mais de um pedido.
-select pd.cliente_id, sum(pd.valor) as sum_pedidos 
+select c.nome, sum(pd.valor) as sum_pedidos 
 	from pedidos pd
-		inner join clientes c
-		on c.cliente_id = pd.cliente_id
-	group by pd.cliente_id
-order by pd.cliente_id
+	inner join clientes c
+		on pd.cliente_id = c.cliente_id
+group by pd.cliente_id, c.nome
+--next line filter client that have more than 1 order(pd.cliente_id).
+having count(pd.pedido_id)>1
 
 -- Encontre o preço médio dos produtos em cada categoria.
 select categorias_id, avg(preco) as preco_medio_it_categoria
